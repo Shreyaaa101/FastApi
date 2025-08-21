@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>FastAPI Item Manager</title>
+    <title>TO-DO List</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         form { margin-bottom: 20px; }
@@ -12,20 +12,21 @@
     </style>
 </head>
 <body>
-    <h1>📦 FastAPI Item Manager</h1>
+    <h1>TO-DO LIST</h1>
 
     <form action="/add-item" method="post">
         <input type="text" name="name" placeholder="Item name" required />
-        <textarea name="description" placeholder="Description"></textarea>
-        <input type="number" name="price" placeholder="Price" step="0.01" required />
+        <label>
+            <input type="checkbox" name="status" /> Done?
+        </label>
         <button type="submit">Add Item</button>
     </form>
 
     <h2>Items:</h2>
     {% for item in items %}
         <div class="item">
-            <strong>{{ item.name }}</strong> - ₹{{ item.price }} <br>
-            <small>{{ item.description }}</small>
+            <strong>{{ item.name }}</strong> - 
+            {% if item.status %} ✅ Done {% else %} ⏳ Pending {% endif %}
         </div>
     {% endfor %}
 </body>

@@ -1,38 +1,42 @@
 # filename: main.py
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
-from pydantic import BaseModel
-from fastapi.staticfiles import StaticFiles
+
+from fastapi import FastAPI, Form, Request
+from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
-# Example in-memory database
-fake_db = []
-
-# Templates setup (HTML files in 'templates' folder)
+# setup templates folder
 templates = Jinja2Templates(directory="templates")
 
-# Item model
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
+# in-memory DB
+fake_db = []
 
-# Root → GUI Home
+
+# Root route - show the todo list
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "items": fake_db})
+def read_root(request: Request):
+    return templates.TemplateResponse(
+        "index.html", {"request": request, "items": fake_db}
+    )
 
-# Handle form submission → POST item
+
+# Handle form submission
 @app.post("/add-item")
-def add_item(name: str = Form(...), description: str = Form(""), price: float = Form(...)):
+def add_item(
+    name: str = Form(...),
+    status: str | None = Form(None),   # checkbox → might be None or "on"
+):
     item_id = len(fake_db) + 1
-    item = {"id": item_id, "name": name, "description": description, "price": price}
+    item = {"id": item_id, "name": name, "status": bool(status)}
     fake_db.append(item)
+
+    # redirect back to homepage to show updated list
     return RedirectResponse(url="/", status_code=303)
 
-# API endpoint (if you want JSON access)
-@app.get("/items/")
+
+# Extra route just for debugging (raw JSON)
+@app.get("/items")
 def get_items():
     return {"items": fake_db}
