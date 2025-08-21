@@ -22,6 +22,4 @@ It demonstrates how to:
 
 ![App Screenshot](images/pic1.png)
 
----
 
-## 📂 Project Structure
