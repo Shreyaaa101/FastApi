@@ -18,8 +18,6 @@ It demonstrates how to:
 
 ---
 
-## 📸 Demo (GUI Screenshot)
 
-![App Screenshot](images/pic1.png)
 
 
